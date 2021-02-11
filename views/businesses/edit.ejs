@@ -3,26 +3,27 @@
 <div class="row">
     <h1 class="text-center">Edit Business</h1>
     <div class="col-6 offset-3">
-        <form action="/business/<%=business._id%>?_method=PUT" method="POST">    
+        <form action="/business/<%=business._id%>?_method=PUT" method="POST" novalidate class='needs-validation'>    
             <!-- business name field -->       
              <div class="mb-3">
                 <label class="form-label" for="title">Business Name</label>
-                <input class="form-control" type="text" id="title" name="business[title]" value="<%=business.title%>">
+                <input class="form-control" type="text" id="title" name="business[title]" value="<%=business.title%>" required>
             </div>
             <!-- Business description field - needs character limit to be put in place -->
             <div class="mb-3">
                 <label class="form-label" for="description">Description <small class='text-muted'>500 characters max.</small></label>
-                <textarea class="form-control" name="business[description]" id="description" cols="30" rows="4"><%=business.description%> </textarea>
+                <textarea class="form-control" name="business[description]" id="description" cols="30" rows="4" required><%=business.description%> </textarea>
             </div>
             <!-- Image URL field, will be changed to a file upload eventually -->
             <div class="mb-3">
                 <label class="form-label" for="imgurl">Image URL</label>
-                <input class="form-control" type="text" id="imgurl" name="business[image]" value="<%=business.image%>">
+                <input class="form-control" type="text" id="imgurl" name="business[image]" value="<%=business.image%>" required>
+                <div class="invalid-feedback">You must include at least one image.</div>
             </div>  
             <!-- Business category selection, for loop loops over array saved in app.js and passed to new.ejs (move), more categories to be added -->
             <div class="mb-4">
                 <label class="form-label" for="category">Category</label>
-                <select id='category' class="form-select" aria-label="Default select example" name="business[category]">
+                <select id='category' class="form-select" aria-label="Default select example" name="business[category]" required>
                     <% for(let category of categories){ %>
                         <option value="<%=category%>" <%=business.category === category ? 'selected' : '' %>><%=category%></option>
                     <% } %>
@@ -34,20 +35,22 @@
                 <div class="col">
                     <label class="form-label" for="address">Street Address</label>
                     <input type="text" class="form-control" id='address' name="business[location][address]" value="<%=business.location.address%>" <%=business.onlineOnly ? 'disabled' : ''%>>
+                    <div class="invalid-feedback">You must either provide an address or click my business is online only.</div>
                 </div>
                 <div class="col">
                     <label class="form-label" for="town">Town</label>
-                    <input type="text" class="form-control" id='town' name="business[location][town]" value="<%=business.location.town%>">
+                    <input type="text" class="form-control" id='town' name="business[location][town]" value="<%=business.location.town%>" required>
+                    <div class="invalid-feedback">Your local town must be included.</div>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col">
                     <label class="form-label" for="county">County</label>
-                    <input type="text" class="form-control" id='county' name="business[location][county]" value="<%=business.location.county%>" <%=business.onlineOnly ? 'disabled' : ''%>>
+                    <input type="text" class="form-control" id='county' name="business[location][county]" value="<%=business.location.county%>" <%=business.onlineOnly ? 'disabled' : ''%> required>
                 </div>
                 <div class="col">
                     <label class="form-label" for="postcode">Postcode</label>
-                    <input type="text" class="form-control" id='postcode' name="business[location][postcode]" value="<%=business.location.postcode%>" <%=business.onlineOnly ? 'disabled' : ''%>>
+                    <input type="text" class="form-control" id='postcode' name="business[location][postcode]" value="<%=business.location.postcode%>" <%=business.onlineOnly ? 'disabled' : ''%> required>
                 </div>
             </div>
             <!-- checkbox to say business is online only, javascript code is at bottoms of ejs file, needs moving into its own file and folder -->
@@ -60,7 +63,7 @@
             <!-- find way to trim front of website, then automatically add http://www. when saving to DB -->
             <div class="mb-3">
                 <label class="form-label" for="website">Website</label>
-                <input class="form-control" type="text" id="website" placeholder=""" name="business[website]" value="<%=business.website%>">
+                <input class="form-control" type="text" id="website" placeholder=""" name="business[website]" value="<%=business.website%>" required>
             </div>
             <!-- find way to trim front 0 of number, then automatically +44 when saving to db -->
             <div class="row mb-3">
@@ -73,7 +76,7 @@
                 </div>
                 <div class="col">
                     <label class="form-label" for="email">Email</label>
-                    <input type="text" class="form-control" id='email' name="business[email]" value="<%=business.email%>">
+                    <input type="text" class="form-control" id='email' name="business[email]" value="<%=business.email%>" required>
                 </div>
             </div>
             <!-- d-grid makes button span the full length of box -->
@@ -85,26 +88,3 @@
     </div>
 </div>
 
-<script>
-    const checkbox = document.getElementById('flexCheckDefault')
-    const address = document.getElementById('address')
-    const county = document.getElementById('county')
-    const postcode = document.getElementById('postcode')
-
-    function toggleDisabled(){
-        if(address.disabled === false){
-            address.disabled = true;
-            county.disabled = true;
-            postcode.disabled = true;
-            address.value = '';
-            county.value = '';
-            postcode.value = '';
-        } else {
-            address.disabled = false;
-            county.disabled = false;
-            postcode.disabled = false;
-        }
-    }
-
-    checkbox.addEventListener('change', toggleDisabled, {once: false})
-</script>
