@@ -1,0 +1,45 @@
+module.exports.descriptors = [
+    'Cleaning',
+    'Baking',
+    'Leasing',
+    'Cooking',
+    'Fresh',
+    'Jewellery',
+    'Pet',
+    'Sewing',
+    'Plumbing',
+    'Carpentry',
+    'Dog Walking',
+    'Car',
+    'Linen',
+    'Sweetie',
+    'Techy',
+    'Coaching',
+    'Coffee',
+    'Farming'
+]
+
+module.exports.names = [
+    'Guys',
+    'Family',
+    'Ladies',
+    'Friends',
+    'Group',
+    'Company',
+    'Collective',
+    'Boys',
+    'Girls',
+    'Kings',
+    'Queens',
+    'Kitchen',
+    'Pro',
+    'Experts',
+    'Professionals',
+    'Inc',
+    'Shop',
+    'Stores',
+    'Wizzards',
+    'Creators',
+    'Traders'
+]
+

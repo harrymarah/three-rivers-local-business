@@ -1,0 +1,107 @@
+<% layout('layouts/boilerplate')%> 
+
+<div class="row">
+    <h1 class="text-center">New Business</h1>
+    <div class="col-6 offset-3">
+        <form action="/businesses" method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="title">Add a Business Name</label>
+                <input class="form-control" type="text" id="title" name="business[title]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description <small class='text-muted'>500 characters max.</small></label>
+                <textarea class="form-control" name="business[description]" id="description" cols="30" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="imgurl">Image URL</label>
+                <input class="form-control" type="text" id="imgurl" name="business[image]">
+            </div>  
+            <div class="mb-4">
+                <label class="form-label" for="category">Category</label>
+                <select id='category' class="form-select" aria-label="Default select example" name="business[category]">
+                    <option selected>Select Category</option>
+                    <% for(let category of categories){ %>
+                        <option value="<%=category%>"><%=category%></option>
+                    <% } %> 
+                </select>
+            </div>
+            <h6>Address</h6>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label" for="address">Street Address</label>
+                    <input type="text" class="form-control" id='address' name="business[location][address]">
+                </div>
+                <div class="col">
+                    <label class="form-label" for="town">Town</label>
+                    <input type="text" class="form-control" id='town' name="business[location][town]">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label" for="county">County</label>
+                    <input type="text" class="form-control" id='county' name="business[location][county]" value='Hertfordshire'>
+                </div>
+                <div class="col">
+                    <label class="form-label" for="postcode">Postcode</label>
+                    <input type="text" class="form-control" id='postcode' name="business[location][postcode]" value='WD3'>
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value='true' id="flexCheckDefault" name='business[onlineOnly]'>
+                <label class="form-check-label" for="flexCheckDefault">
+                  My business is online only
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="website">Website</label>
+                <input class="form-control" type="text" id="website" placeholder=""" name="business[website]">
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label" for="phone">Contact Number</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">+44</span>
+                        <input type="text" class="form-control" id='phone' name='business[phone]'>
+                      </div>
+                </div>
+                <div class="col">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="text" class="form-control" id='email' name="business[email]">
+                </div>
+            </div>
+            <div class="mb-3 d-grid">
+                <button class='btn btn-success'>Add your business!</button>
+            </div>
+        </form>
+    <a href="/businesses">Back to all businesses</a>
+    </div>
+</div>
+
+<script>
+    const checkbox = document.getElementById('flexCheckDefault')
+    const address = document.getElementById('address')
+    const county = document.getElementById('county')
+    const postcode = document.getElementById('postcode')
+
+    function toggleDisabled(){
+        if(address.disabled === false){
+            address.disabled = true;
+            county.disabled = true;
+            postcode.disabled = true;
+            address.value = '';
+            county.value = '';
+            postcode.value = '';
+        } else {
+            address.disabled = false;
+            county.disabled = false;
+            postcode.disabled = false;
+        }
+    }
+
+    checkbox.addEventListener('change', toggleDisabled, {once: false})
+
+    const capitalize = (s) => {
+        if (typeof s !== 'string') return ''
+        return s.charAt(0).toUpperCase() + s.slice(1)
+        }
+</script>
