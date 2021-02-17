@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const engine = require('ejs-mate');
+const {businessSchema} = require('./schemas');
 const catchAsync = require('./utils/catchAsync');
 const methodOverride = require('method-override');
 const Business = require('./models/business');
@@ -30,6 +31,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'));
 
+const validateBusiness = (req, res, next) => {
+    const {error} = businessSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(400, msg)
+    } else {
+        next();
+    }
+}
+
 app.get('/', (req, res)=> {
     res.render('home');
 })
@@ -43,8 +54,7 @@ app.get('/business/new', (req, res) => {
     res.render('businesses/new', {categories});
 })
 
-app.post('/businesses', catchAsync(async (req, res, next) => {
-        if(!req.body.business) throw new ExpressError(400, 'Invalid Business Data');
+app.post('/businesses', validateBusiness, catchAsync(async (req, res, next) => {
         const business = new Business(req.body.business);
         await business.save();
         res.redirect(`business/${business._id}`)
@@ -63,7 +73,7 @@ app.get('/business/:id/edit', catchAsync(async (req, res) => {
     res.render('businesses/edit', {business, categories});
 }))
 
-app.put('/business/:id', catchAsync(async (req, res) => {
+app.put('/business/:id', validateBusiness, catchAsync(async (req, res) => {
     const {id} = req.params
     const business = await Business.findByIdAndUpdate(id, {...req.body.business});
     res.redirect(`/business/${business._id}`)
