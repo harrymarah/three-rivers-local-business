@@ -14,7 +14,8 @@ const categories = ['local produce', 'jewellery', 'food and drink', 'other']
 mongoose.connect('mongodb://localhost:27017/local-business', {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
 const db = mongoose.connection;
@@ -73,7 +74,7 @@ app.post('/businesses', validateBusiness, catchAsync(async (req, res, next) => {
 
 app.get('/business/:id', catchAsync(async (req, res) => {
     const {id} = req.params
-    const business = await Business.findById(id);
+    const business = await Business.findById(id).populate('reviews');
     res.render('businesses/show', {business});
 }))
 
@@ -103,6 +104,13 @@ app.post('/business/:id/reviews', validateReview, catchAsync( async(req, res) =>
     await review.save();
     await business.save();
     res.redirect(`/business/${business._id}`)
+}))
+
+app.delete('/business/:id/reviews/:reviewId', catchAsync( async(req, res) => {
+    const {id, reviewId} = req.params;
+    await Business.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/business/${id}`)
 }))
 
 app.all('*', (req, res, next) => {
