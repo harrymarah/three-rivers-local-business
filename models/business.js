@@ -9,7 +9,11 @@ const BusinessSchema = new Schema({
     category: {
         type: String,
         lowercase: true,
-        enum: ['local produce', 'jewellery', 'food and drink', 'other']
+        enum: 
+            ['local produce', 
+            'jewellery', 
+            'food and drink', 
+            'other']
     },
     location: {
         address: String,
@@ -20,7 +24,13 @@ const BusinessSchema = new Schema({
     onlineOnly: Boolean,
     website: String,
     phone: Number,
-    email: String
+    email: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
 
 

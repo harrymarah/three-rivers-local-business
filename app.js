@@ -2,11 +2,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const engine = require('ejs-mate');
-const {businessSchema} = require('./schemas');
+const {businessSchema, reviewSchema} = require('./schemas');
 const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/expressError')
 const methodOverride = require('method-override');
 const Business = require('./models/business');
-const ExpressError = require('./utils/expressError')
+const Review = require('./models/review');
 
 const categories = ['local produce', 'jewellery', 'food and drink', 'other']
 
@@ -33,6 +34,16 @@ app.use(methodOverride('_method'));
 
 const validateBusiness = (req, res, next) => {
     const {error} = businessSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(400, msg)
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const {error} = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(400, msg)
@@ -83,6 +94,15 @@ app.delete('/business/:id', catchAsync(async (req, res) => {
     const {id} = req.params;
     const business = await Business.findByIdAndDelete(id);
     res.redirect('/businesses');
+}))
+
+app.post('/business/:id/reviews', validateReview, catchAsync( async(req, res) => {
+    const business = await Business.findById(req.params.id); 
+    const review = new Review(req.body.review);
+    business.reviews.push(review);
+    await review.save();
+    await business.save();
+    res.redirect(`/business/${business._id}`)
 }))
 
 app.all('*', (req, res, next) => {
