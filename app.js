@@ -2,14 +2,11 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const engine = require('ejs-mate');
-const {businessSchema, reviewSchema} = require('./schemas');
-const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/expressError')
 const methodOverride = require('method-override');
-const Business = require('./models/business');
-const Review = require('./models/review');
 
-const categories = ['local produce', 'jewellery', 'food and drink', 'other']
+const businesses = require('./routes/businesses');
+const reviews = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/local-business', {
     useNewUrlParser: true,
@@ -32,89 +29,17 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'));
+app.use(express.static('public/scripts'))
 
-const validateBusiness = (req, res, next) => {
-    const {error} = businessSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(400, msg)
-    } else {
-        next();
-    }
-}
-
-const validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(400, msg)
-    } else {
-        next();
-    }
-}
+app.use('/business', businesses)
+app.use('/business/:id/reviews', reviews)
 
 app.get('/', (req, res)=> {
     res.render('home');
 })
 
-app.get('/businesses', catchAsync(async (req, res) => {
-    const businesses = await Business.find({});
-    res.render('businesses/index', {businesses});
-}))
-
-app.get('/business/new', (req, res) => {
-    res.render('businesses/new', {categories});
-})
-
-app.post('/businesses', validateBusiness, catchAsync(async (req, res, next) => {
-        const business = new Business(req.body.business);
-        await business.save();
-        res.redirect(`business/${business._id}`)
-}))
-
-app.get('/business/:id', catchAsync(async (req, res) => {
-    const {id} = req.params
-    const business = await Business.findById(id).populate('reviews');
-    res.render('businesses/show', {business});
-}))
-
-
-app.get('/business/:id/edit', catchAsync(async (req, res) => {
-    const {id} = req.params
-    const business = await Business.findById(req.params.id);
-    res.render('businesses/edit', {business, categories});
-}))
-
-app.put('/business/:id', validateBusiness, catchAsync(async (req, res) => {
-    const {id} = req.params
-    const business = await Business.findByIdAndUpdate(id, {...req.body.business});
-    res.redirect(`/business/${business._id}`)
-}))
-
-app.delete('/business/:id', catchAsync(async (req, res) => {
-    const {id} = req.params;
-    const business = await Business.findByIdAndDelete(id);
-    res.redirect('/businesses');
-}))
-
-app.post('/business/:id/reviews', validateReview, catchAsync( async(req, res) => {
-    const business = await Business.findById(req.params.id); 
-    const review = new Review(req.body.review);
-    business.reviews.push(review);
-    await review.save();
-    await business.save();
-    res.redirect(`/business/${business._id}`)
-}))
-
-app.delete('/business/:id/reviews/:reviewId', catchAsync( async(req, res) => {
-    const {id, reviewId} = req.params;
-    await Business.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/business/${id}`)
-}))
-
 app.all('*', (req, res, next) => {
-    next(new ExpressError('Page not found', 404))
+    next(new ExpressError(404, 'Page not found'))
 })
 
 app.use((err, req, res, next) => {
