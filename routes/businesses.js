@@ -27,14 +27,19 @@ router.get('/new', (req, res) => {
 })
 
 router.post('/', validateBusiness, catchAsync(async (req, res, next) => {
-        const business = new Business(req.body.business);
-        await business.save();
-        res.redirect(`business/${business._id}`)
+    const business = new Business(req.body.business);
+    await business.save();
+    req.flash('success', 'Sucessfully added a new business!');
+    res.redirect(`business/${business._id}`)
 }))
 
 router.get('/:id', catchAsync(async (req, res) => {
     const {id} = req.params
     const business = await Business.findById(id).populate('reviews');
+    if(!business){
+        req.flash('error', 'Business doesn\'t exist');
+        res.redirect('/business')
+    }
     res.render('businesses/show', {business});
 }))
 
@@ -42,12 +47,17 @@ router.get('/:id', catchAsync(async (req, res) => {
 router.get('/:id/edit', catchAsync(async (req, res) => {
     const {id} = req.params
     const business = await Business.findById(req.params.id);
+    if(!business){
+        req.flash('error', 'Business doesn\'t exist');
+        res.redirect('/business')
+    }
     res.render('businesses/edit', {business, categories});
 }))
 
 router.put('/:id', validateBusiness, catchAsync(async (req, res) => {
     const {id} = req.params
     const business = await Business.findByIdAndUpdate(id, {...req.body.business});
+    req.flash('success', 'Sucessfully updated your business.')
     res.redirect(`/business/${business._id}`)
 }))
 
