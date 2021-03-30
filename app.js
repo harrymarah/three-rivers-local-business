@@ -6,9 +6,13 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/expressError')
 const methodOverride = require('method-override');
+const passport = require('passport');
+const localStratergy = require('passport-local');
+const User = require('./models/user');
 
-const businesses = require('./routes/businesses');
-const reviews = require('./routes/reviews');
+const userRoutes = require('./routes/users');
+const businessRoutes = require('./routes/businesses');
+const reviewRoutes = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/local-business', {
     useNewUrlParser: true,
@@ -47,14 +51,23 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStratergy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
-app.use('/business', businesses)
-app.use('/business/:id/reviews', reviews)
+app.use('/business', businessRoutes);
+app.use('/business/:id/reviews', reviewRoutes);
+app.use('/', userRoutes);
 
 app.get('/', (req, res)=> {
     res.render('home');

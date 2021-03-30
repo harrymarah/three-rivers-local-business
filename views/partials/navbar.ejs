@@ -19,6 +19,14 @@
             <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
           </li>
         </ul>
+        <div class="navbar-nav ms-auto">
+          <% if(!currentUser){ %> 
+          <a href="/login" class="nav-link">Login</a>
+          <a href="/register" class="nav-link">Register</a>
+          <% } else {  %> 
+          <a href="/logout" class="nav-link ">Logout</a>
+          <% } %> 
+        </div>
       </div>
     </div>
   </nav>
