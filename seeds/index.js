@@ -22,6 +22,7 @@ const seedDB = async () => {
   await Business.deleteMany({});
   for(let i = 0; i < 100; i++){
     const business = new Business({
+      addedBy: '60548dab52a132e0d868b782',
       title: `${sample(descriptors)} ${sample(names)}`,
       image: 'https://source.unsplash.com/collection/1373158',
       description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nam non dolor modi. Eos cum maxime ipsa laborum, animi numquam cupiditate inventore similique voluptatem blanditiis minima recusandae praesentium, distinctio, adipisci autem!',

@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 const BusinessSchema = new Schema({
     title: String,
     description: String,
+    addedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     image: String,
     category: {
         type: String,

@@ -11,19 +11,23 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><%= business.location.town %></li>
+              <li class="list-group-item">Added by: <%= business.addedBy.username %></li>
               <li class="list-group-item"><a href="http://www.<%= business.website %>" target="_blank"><%= business.website %></a></li>
               <li class="list-group-item">0<%= business.phone %></li>
             </ul>
+            <% if(currentUser && business.addedBy.equals(currentUser._id)){ %> 
             <div class="card-body">
                 <a href="/business/<%=business._id%>/edit" class="card-link btn btn-primary">Edit business</a>
                 <form class='d-inline' action="/business/<%=business._id%>?_method=DELETE" method="POST">
                     <button class='card-link btn btn-danger'>Delete</button>
                 </form>            
             </div>
+            <% } %> 
           </div>
     </div>
     <div class="mb-3 col-4">
         <h2>Leave a review</h2>
+        <% if(currentUser){ %> 
         <form class='needs-validation' action="/business/<%=business._id%>/reviews" method="POST" novalidate>
             <div class="mb-3">
                 <label class='form-label' for="rating">Rating:</label>
@@ -36,15 +40,23 @@
             </div>
             <button class="btn btn-success mb-3">Submit</button>
         </form>
+        <% } else { %>
+        <div class="alert alert-warning d-flex justify-content-between" role="alert">
+            You must be logged in to leave a review. <a href="/login"><button class='btn btn-warning btn-sm'>login</button></a>
+            </div>
+        <% } %> 
         <div class="mb-3">
             <% for(let review of business.reviews){ %>
                 <div class="mb-3 card">
                     <div class="card-body">
                         <h5 class='card-title'>Rating: <%= review.rating %></h5> 
+                        <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username %> </h6>
                         <p class='card-text'><%= review.body %></p>
+                        <% if(currentUser && review.author.equals(currentUser._id)){ %> 
                         <form action="/business/<%= business._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
+                        <% } %> 
                     </div>
                 </div>
             <% } %>
