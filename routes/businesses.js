@@ -4,10 +4,15 @@ const businesses = require('../controllers/business')
 const catchAsync = require('../utils/catchAsync');
 const Business = require('../models/business');
 const {isLoggedIn, validateBusiness, isOwner} = require('../middleware');
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 router.route('/')
     .get(catchAsync(businesses.index))
-    .post(isLoggedIn, validateBusiness, catchAsync(businesses.addBusiness))
+    // .post(isLoggedIn, validateBusiness, catchAsync(businesses.addBusiness))
+    .post(upload.array('business[images]'), (req, res) => {
+        res.send(req.body)
+    })
 
 router.route('/new').get(isLoggedIn, businesses.renderNewForm)
 

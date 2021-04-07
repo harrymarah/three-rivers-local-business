@@ -3,7 +3,7 @@
 <div class="row">
     <h1 class="text-center">New Business</h1>
     <div class="col-6 offset-3">
-        <form action="/business" method="POST" novalidate class='needs-validation'>
+        <form action="/business" method="POST" novalidate class='needs-validation' enctype="multipart/form-data">
             <!-- business name field -->
             <div class="mb-3">
                 <label class="form-label" for="title">Add a Business Name</label>
@@ -16,10 +16,13 @@
             </div>
             <!-- Image URL field, will be changed to a file upload eventually -->
             <div class="mb-3">
+                <input type="file" name="business[images]" id="" multiple>
+            </div>
+            <!-- <div class="mb-3">
                 <label class="form-label" for="imgurl">Image URL</label>
                 <input class="form-control" type="text" id="imgurl" name="business[image]" required>
                 <div class="invalid-feedback">You must include at least one image.</div>
-            </div>  
+            </div>   -->
             <!-- Business category selection, for loop loops over array saved in app.js and passed to new.ejs (move), more categories to be added -->
             <div class="mb-4">
                 <label class="form-label" for="category">Category</label>
