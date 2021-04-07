@@ -18,4 +18,18 @@ function toggleDisabled(){
     }
 }
 
+function disableInputs(e) {
+    if(checkbox.checked){
+        address.disabled = true;
+        county.disabled = true;
+        postcode.disabled = true;
+        address.value = '';
+        county.value = '';
+        postcode.value = '';
+    } else null
+}
+
 checkbox.addEventListener('change', toggleDisabled, {once: false})
+
+//Fixes bug that stops checkbox being check and inputs all enabled if user clicks back button after submitting business
+window.addEventListener('load', disableInputs)
