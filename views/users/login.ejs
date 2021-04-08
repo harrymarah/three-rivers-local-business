@@ -2,20 +2,22 @@
 
 <h1>Login</h1>
 
-<form action="/login" method="POST" class='needs-validation' novalidate>
-    <div class="row mb-3">
-        <div class="col">
-            <label class="form-label" for="username">Username:</label>
-            <input type="text" class="form-control" id='username' name="username" required>
-            <div class="invalid-feedback">Enter a username.</div>
+<div class="col-10 offset-1">
+    <form action="/login" method="POST" class='needs-validation' novalidate>
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label" for="username">Username:</label>
+                <input type="text" class="form-control" id='username' name="username" required>
+                <div class="invalid-feedback">Enter a username.</div>
+            </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col">
-            <label class="form-label" for="password">Password:</label>
-            <input type="password" class="form-control" id='password' name="password" required>
-            <div class="invalid-feedback">Passwords should contain at least 8 characters, 1 number and 1 uppercase letter.</div>
-        </div>
-    </div> 
-    <button class="btn btn-success">Login</button>
-</form>
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label" for="password">Password:</label>
+                <input type="password" class="form-control" id='password' name="password" required>
+                <div class="invalid-feedback">Passwords should contain at least 8 characters, 1 number and 1 uppercase letter.</div>
+            </div>
+        </div> 
+        <button class="btn btn-success">Login</button>
+    </form>
+</div>
