@@ -6,7 +6,6 @@ module.exports.businessSchema = Joi.object({
     business: Joi.object({
         title: Joi.string().required(),
         description: Joi.string().max(500).required(),
-        image: Joi.string().required(),
         category: Joi.string().required(),
         location: Joi.object({
             address: Joi.string(),

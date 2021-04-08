@@ -24,7 +24,25 @@ const seedDB = async () => {
     const business = new Business({
       addedBy: '60548dab52a132e0d868b782',
       title: `${sample(descriptors)} ${sample(names)}`,
-      image: 'https://source.unsplash.com/collection/1373158',
+      images: [
+        {
+          url: 'https://res.cloudinary.com/dtyeth4uh/image/upload/v1617891157/LocalBusiness/wchztrxrpatognyjnv6g.jpg',
+          filename: 'LocalBusiness/wchztrxrpatognyjnv6g'
+        },
+        {
+          url: 'https://res.cloudinary.com/dtyeth4uh/image/upload/v1617891168/LocalBusiness/ftretcqeipro8gfzvq3z.jpg',
+          filename: 'LocalBusiness/ftretcqeipro8gfzvq3z'
+        },
+        {
+          url: 'https://res.cloudinary.com/dtyeth4uh/image/upload/v1617891201/LocalBusiness/ojim32nxdxkfr9hbxpez.jpg',
+          filename: 'LocalBusiness/ojim32nxdxkfr9hbxpez'
+        },
+        {
+          url: 'https://res.cloudinary.com/dtyeth4uh/image/upload/v1617891203/LocalBusiness/hr5twemuz50rjgkzhy7t.jpg',
+          filename: 'LocalBusiness/hr5twemuz50rjgkzhy7t'
+        }
+      ],
+    
       description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nam non dolor modi. Eos cum maxime ipsa laborum, animi numquam cupiditate inventore similique voluptatem blanditiis minima recusandae praesentium, distinctio, adipisci autem!',
       location: {
         address: addresses[i].address,

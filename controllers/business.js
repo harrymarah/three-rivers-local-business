@@ -13,8 +13,10 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.addBusiness = async (req, res, next) => {
     const business = new Business(req.body.business);
+    business.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     business.addedBy = req.user._id;
     await business.save();
+    console.log(business)
     req.flash('success', 'Sucessfully added a new business!');
     res.redirect(`business/${business._id}`)
 };
@@ -47,6 +49,9 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateBusiness = async (req, res) => {
     const {id} = req.params;
     const business = await Business.findByIdAndUpdate(id, {...req.body.business});
+    const imgs = req.files.map(f => ({url: f.path, filename: f.filename}))
+    business.images.push(...imgs);
+    await business.save();
     req.flash('success', 'Sucessfully updated your business.')
     res.redirect(`/business/${business._id}`)
 };
