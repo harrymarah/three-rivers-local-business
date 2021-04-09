@@ -17,7 +17,8 @@ module.exports.businessSchema = Joi.object({
         website: Joi.string().domain().required(),
         phone: Joi.number(),
         email: Joi.string().email().required(),
-    }).required()
+    }).required(),
+    deleteImages: Joi.array()
 })
 
 module.exports.reviewSchema  = Joi.object({

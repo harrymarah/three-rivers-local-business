@@ -78,6 +78,22 @@
                     <input type="text" class="form-control" id='email' name="business[email]" value="<%=business.email%>" required>
                 </div>
             </div>
+            <div class="mb-3">
+                <h4>Tick box to delete images</h4>
+                <p class='text-muted'><em>Then click update</em></p>
+            </div>
+            <div class="mb-3 d-flex flex-wrap justify-content-between">
+                <% business.images.forEach((img, i) => { %>
+                    <div class="">
+                        <label for="image-<%=i%>">
+                            <img src="<%= img.thumbnail %>"  class='img-thumbnail mb-2' alt="">
+                        </label>
+                        <div class="form-check-inline">
+                            <input type="checkbox" name='deleteImages[]' id="image-<%=i%>" value='<%= img.filename %>'>
+                        </div>
+                    </div>
+                <% }) %>  
+            </div>
             <!-- d-grid makes button span the full length of box -->
             <div class="mb-3 d-grid">
                 <button class='btn btn-success'>Update</button>
@@ -86,4 +102,3 @@
     <a href="/business">Back to all businesses</a>
     </div>
 </div>
-

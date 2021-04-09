@@ -1,4 +1,6 @@
 const Business = require('../models/business');
+const {cloudinary} = require('../cloudinary')
+
 const categories = ['local produce', 'jewellery', 'food and drink', 'other'];
 
 
@@ -52,6 +54,13 @@ module.exports.updateBusiness = async (req, res) => {
     const imgs = req.files.map(f => ({url: f.path, filename: f.filename}))
     business.images.push(...imgs);
     await business.save();
+    console.log(req.body.deleteImages)
+    if(req.body.deleteImages){
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename)
+        }
+        await business.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
+    }
     req.flash('success', 'Sucessfully updated your business.')
     res.redirect(`/business/${business._id}`)
 };
