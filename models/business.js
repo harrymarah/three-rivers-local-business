@@ -34,6 +34,18 @@ const BusinessSchema = new Schema({
         county: String,
         postcode: String
     },
+    geometry: {
+        type: {
+            type: String,
+            enum: 'Point',
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+       
+    },
     onlineOnly: Boolean,
     website: String,
     phone: Number,

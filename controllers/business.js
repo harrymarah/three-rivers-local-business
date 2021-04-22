@@ -1,4 +1,7 @@
 const Business = require('../models/business');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({accessToken: mapboxToken});
 const {cloudinary} = require('../cloudinary')
 
 const categories = ['local produce', 'jewellery', 'food and drink', 'other'];
@@ -14,7 +17,12 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.addBusiness = async (req, res, next) => {
+    const geoData = await geocoder.forwardGeocode({
+        query: Object.values(req.body.business.location).join(', '),
+        limit: 1
+    }).send()
     const business = new Business(req.body.business);
+    business.geometry = geoData.body.features[0].geometry;
     business.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     business.addedBy = req.user._id;
     await business.save();
