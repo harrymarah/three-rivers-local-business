@@ -61,6 +61,8 @@
           </div>
     </div>
     <div class="mb-3 col-4">
+        <div id='map' style='width: 400px; height: 300px;'></div>
+        <small class="text-muted mb-5"><em>Approximate Location</em></small>
         <h2 class='mb-3'>Leave a review</h2>
         <% if(currentUser){ %> 
         <form class='needs-validation' action="/business/<%=business._id%>/reviews" method="POST" novalidate>
@@ -113,9 +115,15 @@
 </div>
 
 
-
+<p><%= business.geometry.coordinates %></p>
 
 
 <footer>
     <a href="/business">Back to index</a>
 </footer>
+
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
+    const businesses = <%-JSON.stringify(business)%>
+</script>
+<script src="/scripts/showPageMap.js"></script>
