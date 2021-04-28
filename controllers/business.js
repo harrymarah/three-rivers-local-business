@@ -9,6 +9,7 @@ const categories = ['local produce', 'jewellery', 'food and drink', 'other'];
 
 module.exports.index = async (req, res) => {
     const businesses = await Business.find({});
+    console.log(req.body)
     res.render('businesses/index', {businesses});
 };
 
