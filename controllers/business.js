@@ -8,9 +8,15 @@ const categories = ['local produce', 'jewellery', 'food and drink', 'other'];
 
 
 module.exports.index = async (req, res) => {
-    const businesses = await Business.find({});
-    console.log(req.body)
-    res.render('businesses/index', {businesses});
+    if(req.query.search){
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        const businesses = await Business.find({title: regex});
+        res.render('businesses/index', {businesses});
+    } else {
+        const businesses = await Business.find({});
+        res.render('businesses/index', {businesses});
+    }
+    
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -80,3 +86,6 @@ module.exports.destroyBusiness = async (req, res) => {
     res.redirect('/business');
 };
 
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
